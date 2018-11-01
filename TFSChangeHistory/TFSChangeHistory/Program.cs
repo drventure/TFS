@@ -1,3 +1,5 @@
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.VersionControl.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,17 +70,26 @@ namespace TFSChangeHistory
         {
             ChangesetHistoryRequest request = new ChangesetHistoryRequest();
 
-            for (int index = 0; index < args.Length; index++)
+			//attempt to retrieve the TFS URL via the Workstation info, based on the "current Directory"
+			//this is how TF.exe can connect to TFS without you having to specify the tfs url
+			//user can still override this via the T parameter
+			var wi = Workstation.Current.GetLocalWorkspaceInfo(Environment.CurrentDirectory);
+			request.TFSUrl = wi?.ServerUri.AbsoluteUri;
+			//set default branch to be based on the current directory
+			//user can override with the -r switch
+			request.ReleaseBranchUrl = "./";
+
+			for (int index = 0; index < args.Length; index++)
             {
                 switch (args[index])
                 {
-                    case "-t":
+					case "-t":
                         index++;
                         if (args[index].Trim().StartsWith("-"))
                         {
                             throw new ArgumentException("Value for argument -t is missing");
                         }
-                        request.TFSUrl = args[index];
+                        request.TFSUrl = StripQuotes(args[index]);
                         break;
                     case "-r":
                         index++;
@@ -86,7 +97,7 @@ namespace TFSChangeHistory
                         {
                             throw new ArgumentException("Value for argument -r is missing");
                         }
-                        request.ReleaseBranchUrl = args[index];
+                        request.ReleaseBranchUrl = StripQuotes(args[index]);
                         break;
                     case "-from":
                         index++;
@@ -96,8 +107,8 @@ namespace TFSChangeHistory
                         }
 						if (DateTime.TryParse(args[index], out DateTime fromDate))
 						{
-							request.FromDate = fromDate;
-							if (request.ToDate == DateTime.MinValue) request.ToDate = new DateTime(2100, 1, 1); ;
+							request.FromDate = fromDate.AddDays(-1);
+							if (request.ToDate == DateTime.MinValue) request.ToDate = new DateTime(2200, 1, 1); ;
                         }
                         else
                         {
@@ -113,24 +124,35 @@ namespace TFSChangeHistory
                         if (DateTime.TryParse(args[index], out DateTime toDate))
                         {
                             request.ToDate = toDate;
+							if (request.FromDate == DateTime.MinValue) request.FromDate = new DateTime(1970, 1, 1);
 						}
 						else
                         {
                             throw new ArgumentException("Value for argument -from is invalid");
                         }
                         break;
-                    case "-i":
+                    case "-u":
                         index++;
                         if (args[index].Trim().StartsWith("-"))
                         {
-                            throw new ArgumentException("Value for argument -i is missing");
+                            throw new ArgumentException("Value for argument -u is missing");
                         }
                         request.IgnoreFromUsersString = args[index];
                         break;
+					case "+u":
+						index++;
+						if (args[index].Trim().StartsWith("+"))
+						{
+							throw new ArgumentException("Value for argument +u is missing");
+						}
+						request.IncludeFromUsersString = args[index];
+						break;
 					case "-?":
 					case "-h":
 						PrintUsage();
 						request = null;
+						break;
+					default:
 						break;
 				}
 			}
@@ -139,7 +161,17 @@ namespace TFSChangeHistory
 
         }
 
-        private static void PrintUsage()
+
+		private static string StripQuotes(string v)
+		{
+			v = v.Trim();
+			v = v.Trim('"');
+			v = v.Trim('\'');
+			return v;
+		}
+
+
+		private static void PrintUsage()
         {
 			Console.WriteLine(
 @"
@@ -153,13 +185,16 @@ CLI: TFSChangeHistory.exe [-t <TFS URL>] [-r <branch URL>] [-from <date>] [-to <
 where:
 
 TFS URL         the url of the TFS collection to open
+                (NOTE if you run this utility from a folder that's currently part of a TFS
+                workspace, you do not need to specify this URL, it will be obtained 
+                automatically)
 BRANCH URL      the url of the branch to search
 DATE            a date specification
                 Providing both FROM and TO will locate all history between dates
                 Providing a FROM will locate all history back to and including the date
                 Providing a TO will locate all history up to and including the date
 USERNAME        the TFS username (either short or displayname, or a partial name
-                can be comma seperated for multiple names
+                can be semicolon seperated for multiple names
                 +u indicates users to include in search
                 -u indicates users to exclude in search
 ");

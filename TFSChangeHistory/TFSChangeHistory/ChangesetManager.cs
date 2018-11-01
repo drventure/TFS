@@ -15,31 +15,47 @@ namespace TFSChangeHistory
         { 
             List<ChangesetViewModel> changesetList = new List<ChangesetViewModel>();
 
-            using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(request.TFSUrl)))
-            {
-                tpc.EnsureAuthenticated();
-                VersionControlServer vcs = tpc.GetService<VersionControlServer>();
+			using (TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(request.TFSUrl)))
+			{
+				tpc.EnsureAuthenticated();
+				VersionControlServer vcs = tpc.GetService<VersionControlServer>();
 
 				VersionSpec fromDateVersion = null;
 				VersionSpec toDateVersion = null;
 				if (request.FromDate != DateTime.MinValue || request.ToDate != DateTime.MinValue)
 				{
-					fromDateVersion = new DateVersionSpec(request.FromDate.AddDays(-1)); 
+					fromDateVersion = new DateVersionSpec(request.FromDate);
 					toDateVersion = new DateVersionSpec(request.ToDate);
 				}
 
-                IEnumerable changesets = vcs.QueryHistory(request.ReleaseBranchUrl, VersionSpec.Latest,
-                    0, RecursionType.Full, null, fromDateVersion, toDateVersion, int.MaxValue, true, true);
+				IEnumerable changesets = vcs.QueryHistory(request.ReleaseBranchUrl, VersionSpec.Latest,
+					0, RecursionType.Full, null, fromDateVersion, toDateVersion, int.MaxValue, true, true);
 
-                var ignoreUsers = request.IgnoreFromUsers;
+				var ignoreUsers = request.IgnoreFromUsers;
+				var includeUsers = request.IncludeFromUsers;
 				foreach (Changeset changeset in changesets)
 				{
-					if (!ignoreUsers.Any(n => changeset.Owner.ToLower().Contains(n) || changeset.OwnerDisplayName.ToLower().Contains(n)))
+					//default to include if there are no users in the include list
+					var add = includeUsers.Length == 0;
+					if (includeUsers.Any(n => changeset.Owner.ToLower().Contains(n) || changeset.OwnerDisplayName.ToLower().Contains(n)))
+					{
+						//if there are include users and this is one, include it
+						add = true;
+					}
+
+					if (ignoreUsers.Any(n => changeset.Owner.ToLower().Contains(n) || changeset.OwnerDisplayName.ToLower().Contains(n)))
+					{
+						//don't include if there are IgnoreUsers and this is one of them
+						add = false;
+					}
+
+
+					if (add)
 					{
 						changesetList.Add(new ChangesetViewModel() { ChangesetId = changeset.ChangesetId, Owner = changeset.OwnerDisplayName ?? changeset.Owner, Comment = changeset.Comment, CheckInDateTime = changeset.CreationDate });
 					}
 				}
-            }
+			}
             return changesetList;
         }
 

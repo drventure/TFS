@@ -22,5 +22,19 @@ namespace TFSChangeHistory
                 return (IgnoreFromUsersString ?? "wsbuilduser").ToLower().Split(';');
             }
         }
-    }
+
+
+		public string IncludeFromUsersString { get; set; }
+		public string[] IncludeFromUsers
+		{
+			get
+			{
+				if (string.IsNullOrWhiteSpace(IncludeFromUsersString))
+				{
+					return new string[] { };
+				}
+				return IncludeFromUsersString.ToLower().Split(';');
+			}
+		}
+	}
 }
