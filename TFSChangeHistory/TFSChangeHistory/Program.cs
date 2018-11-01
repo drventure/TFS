@@ -2,12 +2,13 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TFSChangeHistory
+namespace TFSHistory
 {
     static class Program
     {
@@ -75,8 +76,8 @@ namespace TFSChangeHistory
                 Console.WriteLine("Unknown error");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
-            }
-        }
+			}
+		}
 
         private static ChangesetHistoryRequest ParseArgs(string[] args)
         {

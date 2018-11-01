@@ -1,4 +1,4 @@
-﻿namespace TFSChangeHistory
+namespace TFSHistory
 {
     partial class Form1
     {
