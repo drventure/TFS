@@ -19,7 +19,7 @@ namespace TFSChangeHistory
         [STAThread]
         static void Main(string[] args)
         {
-            if (args == null || args.Contains("-c") == false)
+            if (args == null)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -38,16 +38,19 @@ namespace TFSChangeHistory
             try
             {
                 var request = ParseArgs(args);
-                var response = ChangesetManager.GetChangesetHistory(request);
+				if (request != null)
+				{
+					var response = ChangesetManager.GetChangesetHistory(request);
 
-				const string OUTPUTFORMATHEADER = "{0,-9} {1,-20} {2,10}  {3}";
-				Console.WriteLine(OUTPUTFORMATHEADER, "Changeset", "Author", "Check-In", "Comments");
+					const string OUTPUTFORMATHEADER = "{0,-9} {1,-20} {2,10}  {3}";
+					Console.WriteLine(OUTPUTFORMATHEADER, "Changeset", "Author", "Check-In", "Comments");
 
-				const string OUTPUTFORMAT = "{0,-9} {1,-20} {2:yyyy-MM-dd}  {3}";
-				foreach (var changeset in response)
-                {
-                    Console.WriteLine(OUTPUTFORMAT, changeset.ChangesetId, changeset.Owner, changeset.CheckInDateTime, changeset.Comment.Replace("\r", " ").Replace("\n", " "));
-                }
+					const string OUTPUTFORMAT = "{0,-9} {1,-20} {2:yyyy-MM-dd}  {3}";
+					foreach (var changeset in response)
+					{
+						Console.WriteLine(OUTPUTFORMAT, changeset.ChangesetId, changeset.Owner, changeset.CheckInDateTime, changeset.Comment.Replace("\r", " ").Replace("\n", " "));
+					}
+				}
             }
             catch (ArgumentException aex)
             {
@@ -124,8 +127,13 @@ namespace TFSChangeHistory
                         }
                         request.IgnoreFromUsersString = args[index];
                         break;
-                }
-            }
+					case "-?":
+					case "-h":
+						PrintUsage();
+						request = null;
+						break;
+				}
+			}
 
             return request;
 
@@ -133,11 +141,28 @@ namespace TFSChangeHistory
 
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage");
-            Console.WriteLine("UI: TFSChangeHistory.exe");
-            Console.WriteLine("CLI: TFSChangeHistory.exe -c -t <TFS URL> -r <Release branch URL> -from <Check-in from date> -to <Check-in to date> -i <usernames to ignore delimited by comma> ");
+			Console.WriteLine(
+@"
 
-        }
+TFSChangeHistory (a TFS History search tool)
 
-    }
+Usage:
+UI:	 TFSChangeHistory.exe
+CLI: TFSChangeHistory.exe [-t <TFS URL>] [-r <branch URL>] [-from <date>] [-to <date>] [-u <username>] [+u <username>]
+
+where:
+
+TFS URL         the url of the TFS collection to open
+BRANCH URL      the url of the branch to search
+DATE            a date specification
+                Providing both FROM and TO will locate all history between dates
+                Providing a FROM will locate all history back to and including the date
+                Providing a TO will locate all history up to and including the date
+USERNAME        the TFS username (either short or displayname, or a partial name
+                can be comma seperated for multiple names
+                +u indicates users to include in search
+                -u indicates users to exclude in search
+");
+		}
+	}
 }
