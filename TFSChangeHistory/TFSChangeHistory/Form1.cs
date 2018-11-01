@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -60,7 +60,7 @@ namespace TFSChangeHistory
             }
             catch (ArgumentException aex)
             {
-                MessageBox.Show("Check your inputs and try again", "Valdiation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Check your inputs and try again: {aex.Message}", "Validation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {

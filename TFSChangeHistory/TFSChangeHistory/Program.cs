@@ -66,6 +66,8 @@ namespace TFSChangeHistory
             }
             catch (ArgumentException aex)
             {
+				Console.WriteLine($"Argument error: {aex.Message}");
+
                 PrintUsage();
             }
             catch (Exception ex)
