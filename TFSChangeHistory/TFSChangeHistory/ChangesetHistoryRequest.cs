@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace TFSChangeHistory
 {
-    public class ChangesetHistoryRequest
-    {
-        public string TFSUrl { get; set; }
-        public string ReleaseBranchUrl { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+	public class ChangesetHistoryRequest
+	{
+		public string TFSUrl { get; set; }
+		public string ReleaseBranchUrl { get; set; }
+		public DateTime FromDate { get; set; }
+		public DateTime ToDate { get; set; }
 
-        public string IgnoreFromUsersString { get; set; }
+		public string IgnoreFromUsersString { get; set; }
 
-        public string[] IgnoreFromUsers
-        {
-            get
-            {
-                return (IgnoreFromUsersString ?? "wsbuilduser").ToLower().Split(';');
-            }
-        }
+		public string[] IgnoreFromUsers
+		{
+			get
+			{
+				return (IgnoreFromUsersString ?? "wsbuilduser").ToLower().Split(';');
+			}
+		}
 
 
 		public string IncludeFromUsersString { get; set; }
@@ -36,5 +36,13 @@ namespace TFSChangeHistory
 				return IncludeFromUsersString.ToLower().Split(';');
 			}
 		}
+
+
+		public ChangesetHistoryRequest()
+		{
+			FromDate = new DateTime(1970, 1, 1);
+			ToDate = new DateTime(2200, 1, 1);
+		}
+
 	}
 }

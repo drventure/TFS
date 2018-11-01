@@ -44,10 +44,20 @@ namespace TFSChangeHistory
 				{
 					var response = ChangesetManager.GetChangesetHistory(request);
 
-					const string OUTPUTFORMATHEADER = "{0,-9} {1,-20} {2,10}  {3}";
+					Console.WriteLine("");
+					//don't write dates unless there's a range
+					var dates = (request.FromDate.Year != 1970 && request.ToDate.Year != 2200) ?
+						"from {request.FromDate.ToShortDateString()} to {request.ToDate.ToShortDateString()}" :
+						"";
+					//write header
+					Console.WriteLine($"History for {request.ReleaseBranchUrl} {dates}");
+
+					const string OUTPUTFORMATHEADER = "{0,-9} {1,-20} {2,-10}  {3}";
 					Console.WriteLine(OUTPUTFORMATHEADER, "Changeset", "Author", "Check-In", "Comments");
 
 					const string OUTPUTFORMAT = "{0,-9} {1,-20} {2:yyyy-MM-dd}  {3}";
+
+					//write history
 					foreach (var changeset in response)
 					{
 						Console.WriteLine(OUTPUTFORMAT, changeset.ChangesetId, changeset.Owner, changeset.CheckInDateTime, changeset.Comment.Replace("\r", " ").Replace("\n", " "));
@@ -108,7 +118,6 @@ namespace TFSChangeHistory
 						if (DateTime.TryParse(args[index], out DateTime fromDate))
 						{
 							request.FromDate = fromDate.AddDays(-1);
-							if (request.ToDate == DateTime.MinValue) request.ToDate = new DateTime(2200, 1, 1); ;
                         }
                         else
                         {
@@ -124,7 +133,6 @@ namespace TFSChangeHistory
                         if (DateTime.TryParse(args[index], out DateTime toDate))
                         {
                             request.ToDate = toDate;
-							if (request.FromDate == DateTime.MinValue) request.FromDate = new DateTime(1970, 1, 1);
 						}
 						else
                         {

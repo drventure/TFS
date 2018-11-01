@@ -31,6 +31,20 @@ namespace TFSChangeHistory
 				IEnumerable changesets = vcs.QueryHistory(request.ReleaseBranchUrl, VersionSpec.Latest,
 					0, RecursionType.Full, null, fromDateVersion, toDateVersion, int.MaxValue, true, true);
 
+				//try to resolve the branch url to an mapped TFS path
+				//if this doesn't work, just leave the branch URL as is
+				//When user uses the current dir for the path, this will convert to a branch URL
+				try
+				{
+					var ws = vcs.TryGetWorkspace(request.ReleaseBranchUrl);
+					if (ws != null)
+					{
+						request.ReleaseBranchUrl = ws.GetWorkingFolderForLocalItem(request.ReleaseBranchUrl).DisplayServerItem;
+					}
+				}
+				catch { }//safe to ignore any exception here
+
+
 				var ignoreUsers = request.IgnoreFromUsers;
 				var includeUsers = request.IncludeFromUsers;
 				foreach (Changeset changeset in changesets)
