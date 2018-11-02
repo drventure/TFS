@@ -1,7 +1,24 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TFSHistory.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TFSURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://wsengtfs01:8080/tfs/DefaultCollection</Value>
+    </Setting>
+    <Setting Name="BRANCHURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">$/Worksoft/Certify/Main</Value>
+    </Setting>
+    <Setting Name="IGNOREUSERS" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="INCLUDEUSERS" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FROMDATE" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2001-01-01</Value>
+    </Setting>
+    <Setting Name="TODATE" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2499-12-31</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

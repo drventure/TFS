@@ -8,9 +8,9 @@ namespace TFSHistory
 {
     public class ChangesetViewModel
     {
-        public string Comment { get; set; }
-        public int ChangesetId { get; set; }
-        public string Owner { get; set; }
-        public DateTime CheckInDateTime { get; set; }
-    }
+		public int Changeset { get; set; }
+		public DateTime CheckIn { get; set; }
+		public string Owner { get; set; }
+		public string Comment { get; set; }
+	}
 }

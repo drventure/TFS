@@ -22,7 +22,10 @@ namespace TFSHistory
         [STAThread]
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+			Properties.Settings.Default.Upgrade();
+			Properties.Settings.Default.Reload();
+
+			if (args.Length == 0)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -61,7 +64,7 @@ namespace TFSHistory
 					//write history
 					foreach (var changeset in response)
 					{
-						Console.WriteLine(OUTPUTFORMAT, changeset.ChangesetId, changeset.Owner, changeset.CheckInDateTime, changeset.Comment.Replace("\r", " ").Replace("\n", " "));
+						Console.WriteLine(OUTPUTFORMAT, changeset.Changeset, changeset.Owner, changeset.CheckIn, changeset.Comment.Replace("\r", " ").Replace("\n", " "));
 					}
 				}
             }

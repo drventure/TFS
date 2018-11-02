@@ -22,5 +22,77 @@ namespace TFSHistory.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://wsengtfs01:8080/tfs/DefaultCollection")]
+        public string TFSURL {
+            get {
+                return ((string)(this["TFSURL"]));
+            }
+            set {
+                this["TFSURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("$/Worksoft/Certify/Main")]
+        public string BRANCHURL {
+            get {
+                return ((string)(this["BRANCHURL"]));
+            }
+            set {
+                this["BRANCHURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IGNOREUSERS {
+            get {
+                return ((string)(this["IGNOREUSERS"]));
+            }
+            set {
+                this["IGNOREUSERS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string INCLUDEUSERS {
+            get {
+                return ((string)(this["INCLUDEUSERS"]));
+            }
+            set {
+                this["INCLUDEUSERS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2001-01-01")]
+        public global::System.DateTime FROMDATE {
+            get {
+                return ((global::System.DateTime)(this["FROMDATE"]));
+            }
+            set {
+                this["FROMDATE"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2499-12-31")]
+        public global::System.DateTime TODATE {
+            get {
+                return ((global::System.DateTime)(this["TODATE"]));
+            }
+            set {
+                this["TODATE"] = value;
+            }
+        }
     }
 }

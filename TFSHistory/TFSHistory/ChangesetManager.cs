@@ -66,7 +66,7 @@ namespace TFSHistory
 
 					if (add)
 					{
-						changesetList.Add(new ChangesetViewModel() { ChangesetId = changeset.ChangesetId, Owner = changeset.OwnerDisplayName ?? changeset.Owner, Comment = changeset.Comment, CheckInDateTime = changeset.CreationDate });
+						changesetList.Add(new ChangesetViewModel() { Changeset = changeset.ChangesetId, Owner = changeset.OwnerDisplayName ?? changeset.Owner, Comment = changeset.Comment, CheckIn = changeset.CreationDate });
 					}
 				}
 			}

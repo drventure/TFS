@@ -19,7 +19,11 @@ namespace TFSHistory
 		{
 			get
 			{
-				return (IgnoreFromUsersString ?? "wsbuilduser").ToLower().Split(';');
+				if (string.IsNullOrWhiteSpace(IncludeFromUsersString))
+				{
+					return new string[] { "wsbuilduser" };
+				}
+				return IgnoreFromUsersString.ToLower().Split(';');
 			}
 		}
 
